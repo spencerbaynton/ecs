@@ -29,11 +29,10 @@ function entities.rectangle ()
     love.math.random(0, 255),
     256 / 2 - 1
   ))
-  entity:add(components.dimensions(
+  local dimensions = entity:add(components.dimensions(
     love.math.random(16, 64),
     love.math.random(16, 64)
   ))
-  local dimensions = entity:getComponent("dimensions")
   entity:add(components.position(
     love.math.random(0, love.graphics.getWidth() - dimensions.width),
     love.math.random(0, love.graphics.getHeight() - dimensions.height)

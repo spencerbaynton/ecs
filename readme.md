@@ -26,7 +26,7 @@ entity = ecs.newEntity()
 
 ### Entity:add
 
-Adds a component and its data to the Entity.
+Adds a component and its data to the Entity. Returns the data from the added component.
 
 ```lua
 Entity:add(component, data)

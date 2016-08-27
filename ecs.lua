@@ -15,6 +15,7 @@ local function add (self, component, data)
   end
   components[id][component] = data
   entities[component][id] = self
+  return data
 end
 
 local function destroy (self)
