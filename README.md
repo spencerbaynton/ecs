@@ -43,12 +43,22 @@ Destroys the Entity.
 Entity:destroy()
 ```
 
-### Entity:getComponent
+### Entity:get
 
 Gets the data for a given component from the Entity.
 
 ```lua
-Entity:getComponent(component)
+Entity:get(component)
+```
+
+- `string` `component` The type of component.
+
+### Entity:has
+
+Whether the Entity has a given component.
+
+```lua
+Entity:has(component)
 ```
 
 - `string` `component` The type of component.

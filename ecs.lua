@@ -2,40 +2,10 @@ local ecs = {}
 
 local next = next
 
-local components = {}
 local entities = {}
 local recycle = {}
 
 local maxn = 0
-
-local function add (self, component, data)
-  local id = self:getID()
-  if not entities[component] then
-    entities[component] = {}
-  end
-  components[id][component] = data
-  entities[component][id] = self
-  return data
-end
-
-local function destroy (self)
-  local id = self:getID()
-  for component in next, components[id] do
-    entities[component][id] = nil
-  end
-  components[id] = nil
-  recycle[#recycle + 1] = id
-end
-
-local function getComponent (self, component)
-  return components[self:getID()][component]
-end
-
-local function remove (self, component)
-  local id = self:getID()
-  components[id][component] = nil
-  entities[component][id] = nil
-end
 
 function ecs.getEntities (component)
   if not entities[component] then
@@ -45,13 +15,11 @@ function ecs.getEntities (component)
 end
 
 function ecs.newEntity ()
-  local Entity = {
-    add = add,
-    destroy = destroy,
-    getComponent = getComponent,
-    remove = remove
-  }
+  local Entity = {}
+
+  local components = {}
   local id
+
   if next(recycle) then
     id = recycle[#recycle]
     recycle[#recycle] = nil
@@ -59,10 +27,37 @@ function ecs.newEntity ()
     maxn = maxn + 1
     id = maxn
   end
-  function Entity:getID ()
-    return id
+
+  function Entity:add (component, data)
+    if not entities[component] then
+      entities[component] = {}
+    end
+    components[component] = data
+    entities[component][self] = true
+    return data
   end
-  components[id] = {}
+
+  function Entity:destroy ()
+    for component in next, components do
+      entities[component][self] = nil
+    end
+    components = nil
+    recycle[#recycle + 1] = id
+  end
+
+  function Entity:get (component)
+    return components[component]
+  end
+
+  function Entity:has (component)
+    return components[component] ~= nil
+  end
+
+  function Entity:remove (component)
+    components[component] = nil
+    entities[component][self] = nil
+  end
+
   return Entity
 end
 
