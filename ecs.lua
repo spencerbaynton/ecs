@@ -3,9 +3,6 @@ local ecs = {}
 local next = next
 
 local entities = {}
-local recycle = {}
-
-local maxn = 0
 
 function ecs.getEntities (component)
   if not entities[component] then
@@ -18,15 +15,6 @@ function ecs.newEntity ()
   local Entity = {}
 
   local components = {}
-  local id
-
-  if next(recycle) then
-    id = recycle[#recycle]
-    recycle[#recycle] = nil
-  else
-    maxn = maxn + 1
-    id = maxn
-  end
 
   function Entity:add (component, data)
     if not entities[component] then
@@ -41,8 +29,7 @@ function ecs.newEntity ()
     for component in next, components do
       entities[component][self] = nil
     end
-    components = nil
-    recycle[#recycle + 1] = id
+    components = {}
   end
 
   function Entity:get (component)
